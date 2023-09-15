@@ -14,10 +14,10 @@ function Projects() {
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (event) => {
-    let value= event.target.value;
-    value= parseInt(value);
+    let value = event.target.value;
+    value = parseInt(value);
 
-    setInputValue(value+parseInt(inputValue));
+    setInputValue(value + parseInt(inputValue));
   };
 
   React.useEffect(() => {
@@ -33,8 +33,17 @@ function Projects() {
   const amountRef = React.useRef(null);
   const amountRefs = React.useRef([]);
 
-  const handlePledge = (pageName, projectTitle,idx) => {
-    console.log(amountRefs.current[idx].value);
+  const [amount, setAmount] = useState(232);
+
+  const handlePledge = (pageName, projectTitle, idx) => {
+    const pledgeAmount = parseInt(amountRefs.current[idx].value);
+
+    setAmount(pledgeAmount); //
+    // setAmount(amountRefs.current[idx].value);
+
+    handlePayment();
+    console.log(parseInt(amountRefs.current[idx].value));
+
     axios
       .post(SERVER_URL + "/creator/project/pledge", {
         timestamp: Date.now(),
@@ -74,14 +83,46 @@ function Projects() {
     let raisedAmount = 0;
     if (audience.length > 0) {
       audience.forEach((element) => {
-        if(element.amount!=null){
+        if (element.amount != null) {
           raisedAmount += parseInt(element.amount);
         }
-    
       });
     }
 
     return raisedAmount;
+  };
+
+  const handlePayment = () => {
+    console.log(typeof amountRefs);
+    const options = {
+      key: "rzp_test_XphPOSB4djGspx", // Replace with your actual Key ID
+      key_secret: "CCrxVo3coD3SKNM3a0Bbh2my",
+      amount: amount * 100,
+      // Amount in paisa (e.g., 1000 paisa = ₹10)
+      currency: "INR",
+      name: "Fundify",
+      description: "Payment for Product",
+      // order_id: Math.random(), // Generate a unique receipt for each transaction
+      handler: function (response) {
+        console.log(response);
+        //response.razorpay_payment_id
+        alert("payment done");
+      },
+      prefill: {
+        name: "Sandeep Kumar",
+        email: "sd769113@gmail.com",
+        contact: "7839107384",
+      },
+      notes: {
+        address: "Fundify Corporate office",
+      },
+      theme: {
+        color: "#F37254", // Customize the color of the Razorpay button
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
 
   return (
@@ -94,8 +135,9 @@ function Projects() {
       }}
       spacing={8}
     >
+      {amount}
       {projects.length > 0 &&
-        projects.map((element,idx) => {
+        projects.map((element, idx) => {
           return (
             <Grid item>
               <Card
@@ -184,7 +226,7 @@ function Projects() {
                       }}
                       size="small"
                       onClick={() =>
-                        handlePledge(element.pageName, element.title,idx)
+                        handlePledge(element.pageName, element.title, idx)
                       }
                       // disabled={alreadyPledged(element.audiences)}
                     >

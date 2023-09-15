@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -17,6 +17,8 @@ import {
 import { useHistory } from "react-router";
 
 function Creators() {
+  const [isOpen, setIsOpen] = useState(false);
+
   let history = useHistory();
 
   const [creators, setCreators] = React.useState([]);
@@ -41,9 +43,12 @@ function Creators() {
     );
   };
 
+  const [open, setOpen] = useState(false);
+
   const [subscription, setSubscription] = React.useState(129);
 
   const handleSubscribe = (pageName) => {
+    handlePayment();
     axios
       .post(SERVER_URL + "/creator/subscribe", {
         audienceEmail: localStorage.getItem("email"),
@@ -71,6 +76,51 @@ function Creators() {
       }
     });
     return alreadySubscribed;
+  };
+
+  const handleOpen = () => {
+    console.log("sdsdsd");
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const handlePayment = () => {
+    const options = {
+      key: "rzp_test_XphPOSB4djGspx", // Replace with your actual Key ID
+      key_secret: "CCrxVo3coD3SKNM3a0Bbh2my",
+      amount: `${subscription * 100}`, // Amount in paisa (e.g., 1000 paisa = ₹10)
+      currency: "INR",
+      name: "Fundify",
+      description: "Payment for Product",
+      // order_id: Math.random(), // Generate a unique receipt for each transaction
+      handler: function (response) {
+        handleOpen();
+        console.log(response);
+        //response.razorpay_payment_id
+        alert("payment done");
+      },
+      prefill: {
+        name: "Sandeep Kumar",
+        email: "sd769113@gmail.com",
+        contact: "7839107384",
+      },
+      notes: {
+        address: "Fundify Corporate office",
+      },
+      theme: {
+        color: "#F37254", // Customize the color of the Razorpay button
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
 
   return (
