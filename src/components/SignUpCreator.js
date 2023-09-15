@@ -160,6 +160,7 @@ export default function SignUpCreator() {
                   id="profileImage"
                   name="profileImage"
                   accept=".jpg"
+                  required
                 />
               </Grid>
               <Grid item xs={12}>

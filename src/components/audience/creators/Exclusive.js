@@ -23,6 +23,12 @@ const videoSrc = (author, name) => {
 function Exclusive() {
   const [audienceInfo, setAudienceInfo] = useState();
   const [exclusiveData, setExclusiveData] = useState([]);
+  const [userEmail,setUserEmail] = useState('');
+
+  useEffect(()=>{
+    const email = localStorage.getItem("email");
+    setUserEmail(email);
+  },[])
 
   useEffect(() => {
     axios
@@ -43,6 +49,7 @@ function Exclusive() {
         axios
           .post(SERVER_URL + "/creators/exclusive", {
             pageNames: creators,
+            userEmail: localStorage.getItem("email")
           })
           .then((response) => {
             console.log(response.data);

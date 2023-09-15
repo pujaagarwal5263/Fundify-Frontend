@@ -22,6 +22,9 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { blueGrey } from "@mui/material/colors";
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+
 
 function Copyright(props) {
   return (
@@ -40,6 +43,7 @@ const theme = createTheme();
 
 export default function LoginAudience() {
   let history = useHistory();
+  const [open, setOpen] = React.useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -51,24 +55,33 @@ export default function LoginAudience() {
       userType: data.get("userType"),
     });
 
-    axios
-      .post(SERVER_URL + "/users/login", {
-        email: data.get("email"),
-        password: data.get("password"),
-        userType: data.get("userType"),
-      })
-      .then((response) => {
-        console.log(response.data.userType);
-        localStorage.setItem("email", response.data.email);
-        localStorage.setItem("userType", response.data.userType);
-        localStorage.setItem("pageName", response.data.pageName);
-        localStorage.setItem("firstName", response.data.firstName);
-        if (response.data.userType === "creator") {
-          history.replace("/creatordashboard/projects");
-        } else {
-          history.replace("/audiencedashboard/creators");
-        }
-      });
+      axios
+        .post(SERVER_URL + "/users/login", {
+          email: data.get("email"),
+          password: data.get("password"),
+          userType: data.get("userType"),
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            localStorage.setItem("email", response.data.email);
+            localStorage.setItem("userType", response.data.userType);
+            localStorage.setItem("pageName", response.data.pageName);
+            localStorage.setItem("firstName", response.data.firstName);
+            if (response.data.userType === "creator") {
+              history.replace("/creatordashboard/projects");
+            } else {
+              history.replace("/audiencedashboard/creators");
+            }
+          } else {
+            setOpen(true);
+     
+          }
+        });
+    
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -199,6 +212,15 @@ export default function LoginAudience() {
               </Grid>
             </Box>
           </Box>
+          <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        message="Invalid Credentials"
+       // action={action}
+      >
+               <Alert severity="error">Invalid Credentials</Alert>
+        </Snackbar>
           <Copyright sx={{ mt: 5 }} />
         </Container>
       </Container>
