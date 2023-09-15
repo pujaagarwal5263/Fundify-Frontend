@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -30,8 +30,6 @@ function Creators() {
       .catch((err) => {});
   }, []);
 
-  
-
   const [subscription, setSubscription] = React.useState(129);
 
   const handleSubscribe = () => {
@@ -42,29 +40,29 @@ function Creators() {
   return (
     <Grid
       container
-      style={{ padding: "4rem", backgroundColor: "black",display:"flex" }}
+      style={{ padding: "4rem", backgroundColor: "black", display: "flex" }}
       spacing={7}
     >
       {creators.map((element) => {
         return (
           <Grid item style={{ marginLeft: "54px" }}>
             <Card
-  sx={{
-    width: 345,
-    "&:hover": {
-      boxShadow: "0 4px 8px white", // Update with your desired shadow style
-    },
-  }}
-  elevation={4}
-  key={element.pageName}
-  style={{
-    margin: "0 auto",
-    borderRadius: "8px",
-    backgroundColor: "#222222",
-    color: "white",
-    padding:"10px"
-  }}
->
+              sx={{
+                width: 345,
+                "&:hover": {
+                  boxShadow: "0 4px 8px white", // Update with your desired shadow style
+                },
+              }}
+              elevation={4}
+              key={element.pageName}
+              style={{
+                margin: "0 auto",
+                borderRadius: "8px",
+                backgroundColor: "#222222",
+                color: "white",
+                padding: "10px",
+              }}
+            >
               <CardMedia
                 component="img"
                 height="200"
@@ -73,7 +71,7 @@ function Creators() {
                 style={{
                   paddingInline: "1rem",
                   paddingTop: ".8rem",
-                  color:"white"
+                  color: "white",
                 }}
               />
               <CardContent>
@@ -90,8 +88,7 @@ function Creators() {
                   paddingTop: "0rem",
                   paddingBottom: "1rem",
                   display: "flex",
-                  justifyContent: "space-between"
-                  
+                  justifyContent: "space-between",
                 }}
               >
                 <FormControl
