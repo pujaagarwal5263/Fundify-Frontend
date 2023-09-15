@@ -74,7 +74,7 @@ function Projects() {
     let raisedAmount = 0;
     if (audience.length > 0) {
       audience.forEach((element) => {
-        if(element.amount!=null){
+        if(element.amount && element.amount!=null){
           raisedAmount += parseInt(element.amount);
         }
     
