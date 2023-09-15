@@ -52,7 +52,9 @@ function Projects() {
 
     if (audience.length > 0) {
       audience.forEach((element) => {
+        if (element.amount && element.amount != null) {
         raisedAmount += parseInt(element.amount);
+        }
       });
     }
 
