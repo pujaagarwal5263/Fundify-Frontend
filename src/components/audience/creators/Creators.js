@@ -91,36 +91,61 @@ function Creators() {
     setOpen(false);
   };
 
-  const handlePayment = () => {
-    const options = {
-      key: "rzp_test_XphPOSB4djGspx", // Replace with your actual Key ID
-      key_secret: "CCrxVo3coD3SKNM3a0Bbh2my",
-      amount: `${subscription * 100}`, // Amount in paisa (e.g., 1000 paisa = ₹10)
-      currency: "INR",
-      name: "Fundify",
-      description: "Payment for Product",
-      // order_id: Math.random(), // Generate a unique receipt for each transaction
-      handler: function (response) {
-        handleOpen();
-        console.log(response);
-        //response.razorpay_payment_id
-        alert("payment done");
-      },
-      prefill: {
-        name: "Sandeep Kumar",
-        email: "sd769113@gmail.com",
-        contact: "7839107384",
-      },
-      notes: {
-        address: "Fundify Corporate office",
-      },
-      theme: {
-        color: "#F37254", // Customize the color of the Razorpay button
-      },
-    };
+  const handlePayment = async() => {
+    // const options = {
+    //   key: "rzp_test_XphPOSB4djGspx", // Replace with your actual Key ID
+    //   key_secret: "CCrxVo3coD3SKNM3a0Bbh2my",
+    //   amount: `${subscription * 100}`, // Amount in paisa (e.g., 1000 paisa = ₹10)
+    //   currency: "INR",
+    //   name: "Fundify",
+    //   description: "Payment for Product",
+    //   // order_id: Math.random(), // Generate a unique receipt for each transaction
+    //   handler: function (response) {
+    //     handleOpen();
+    //     console.log(response);
+    //     //response.razorpay_payment_id
+    //     alert("payment done");
+    //   },
+    //   prefill: {
+    //     name: "Sandeep Kumar",
+    //     email: "sd769113@gmail.com",
+    //     contact: "7839107384",
+    //   },
+    //   notes: {
+    //     address: "Fundify Corporate office",
+    //   },
+    //   theme: {
+    //     color: "#F37254", // Customize the color of the Razorpay button
+    //   },
+    // };
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+    // const rzp = new window.Razorpay(options);
+    // rzp.open();
+    try {
+      const response = await axios.post(`${SERVER_URL}/orders`, { amount: parseInt(subscription) * 100 }); // Convert to paise
+      //const { id } = response.data;
+     // setOrderId(id);
+      const options = {
+        key: 'rzp_test_XphPOSB4djGspx',
+        amount: subscription * 100, // Amount in paise
+        name: 'Your Company Name',
+        description: 'Payment for your services',
+       // order_id: id,
+        handler: function (response) {
+          // Handle the successful payment response here
+          alert('Payment successful');
+        },
+        prefill: {
+          name: 'John Doe',
+          email: 'johndoe@example.com',
+          contact: '1234567890',
+        },
+      };
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (error) {
+      console.error('Error creating order:', error);
+    }
   };
 
   return (
